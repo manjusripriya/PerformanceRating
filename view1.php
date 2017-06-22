@@ -115,7 +115,7 @@ function printDiv(divName) {
            <td><?php echo $row['Factor']; ?></td>
             <td>
               <form name="input_form" method="POST" />
-              <input type="text" id="rate" value="" name="rate" style="width: 50px;"/>
+              <input type="text" id="<?php echo $row['Factor']; ?>" name="rate" style="width: 50px;"/>
             </form>
              <?php
              ?>
