@@ -65,7 +65,7 @@ function printDiv(divName) {
     <option>Select Name...</option>
     <?php
      include('config.php');
-           $sql = "select DISTINCT Name from test WHERE Name not IN('On time payments','Accounting upkeep','SOD','Expenses summarry','Auditing support','Reconciliations','Payables','Recivables') AND Name IS NOT NULL";
+           $sql = "select DISTINCT Name from performance";
            $res = mysqli_query($conn,$sql);
            while ($row = mysqli_fetch_array($res)) {  ?>
            <option <?php echo ($row['Name'] == $name) ? 'selected':""; ?> value="<?php echo $row['Name']; ?>"><?php echo $row['Name'] ?></option>
@@ -104,84 +104,55 @@ function printDiv(divName) {
      
       <?php
            include('config.php');
-           $sql = "SELECT Factor,Q1_cumulative_target,Q1_cumulative_acheived,Q2_cumulative_target,Q2_cumulative_acheived,
-                   Q3_cumulative_target,Q3_cumulative_acheived, Q4_cumulative_target,Q4_cumulative_acheived  
-                  FROM `test` WHERE Name not IN('On time payments','Accounting upkeep','SOD','Expenses summarry','Auditing support',
-                  'Reconciliations','Payables','Recivables') AND Name IS NOT NULL AND name='".$name."'";
+           $sql = "SELECT id,rating50,Name,Factor,Q1_cumulative_target,Q1_cumulative_acheived,Q1_rating,Q2_cumulative_target,Q2_cumulative_acheived,Q2rating,
+                   Q3_cumulative_target,Q3_cumulative_acheived,Q3rating, Q4_cumulative_target,Q4_cumulative_acheived,Q4rating,
+                   Qs_cumulative, Year17_18_Final_Score
+                  FROM performance where Name='".$name."'";
            $res = mysqli_query($conn,$sql);
-           while ($row = mysqli_fetch_array($res)) {  ?>
+           while ($row1 = mysqli_fetch_array($res)) {  ?>
 
            <tr class="primary">
-           <td><?php echo $row['Factor']; ?></td>
-            <td>
-              <form name="input_form" method="POST" />
-              <input type="text" id="<?php echo $row['Factor']; ?>" name="rate" style="width: 50px;"/>
-            </form>
-             <?php
-             ?>
-
+              <td><?php echo $row1['Factor']; ?></td>
+              <td><form name="input_form" method="POST" action=""/>
+              <input type="text" id="<?php echo $row['rating50']; ?>" value="<?php echo isset($_POST['text1']) ? $rating : ''; ?>" name="text1" style="width: 50px;"/>
+              <!--  <input type="text" id="<?php echo $row['rating50']; ?>" name="rate" style="width: 50px;"/> -->
+            </form></td>
+            <td id='q1targ'><?php echo $row1['Q1_cumulative_target']; ?></td>
+            <td id='q1achiv'><?php echo $row1['Q1_cumulative_acheived']; ?></td>
+            <td id=""><?php echo round($row1['Q1_rating'],2); ?>
             </td>
-            <td id='q1targ'><?php echo $row['Q1_cumulative_target']; ?></td>
-            <td id='q1achiv'><?php echo $row['Q1_cumulative_acheived']; ?></td>
-            <td id="ans">
-               <?php
-               /*if(($row['Q1_cumulative_target'])<>0 && ($row['Q1_cumulative_acheived'])<>0){
-              $q=(($row['Q1_cumulative_target']/$row['Q1_cumulative_acheived'])*$rating); echo (round($q,2));
-            }*/
-              ?>
-            </td>
-            <td id='q2targ'><?php echo $row['Q2_cumulative_target']; ?></td>
-            <td id='q2achiv'><?php echo $row['Q2_cumulative_acheived']; ?></td>
-            <td id="ans1"> <?php
-            /*if(($row['Q2_cumulative_target'])<>0 && ($row['Q2_cumulative_acheived'])<>0){
-              $qq=(($row['Q2_cumulative_target']/$row['Q2_cumulative_acheived'])* $rating); echo (round($qq,2));
-            }*/
-              ?>
-            </td>
-            <td id='q3targ'><?php echo $row['Q3_cumulative_target']; ?></td>
-            <td id='q3achiv'><?php echo $row['Q3_cumulative_acheived']; ?></td>
+            <td id='q2targ'><?php echo $row1['Q2_cumulative_target']; ?></td>
+            <td id='q2achiv'><?php echo $row1['Q2_cumulative_acheived']; ?></td>
+            <td id="ans1"><?php echo round($row1['Q2rating'],2); ?>
+                    </td>
+            <td id='q3targ'><?php echo $row1['Q3_cumulative_target']; ?></td>
+            <td id='q3achiv'><?php echo $row1['Q3_cumulative_acheived']; ?></td>
             <td id="ans2">
-              <?php
-              /*if(($row['Q3_cumulative_target'])<>0 && ($row['Q3_cumulative_acheived'])<>0){
-              $qq1=(($row['Q3_cumulative_target']/$row['Q3_cumulative_acheived'])* $rating); echo (round($qq1,2));
-            }*/
-              ?>
+             <?php echo round($row1['Q3rating'],2); ?>
             </td>
             
-            <td id='q4targ'><?php echo $row['Q4_cumulative_target']; ?></td>
-             <td id='q4achiv'><?php echo $row['Q4_cumulative_acheived']; ?></td>
+            <td id='q4targ'><?php echo $row1['Q4_cumulative_target']; ?></td>
+             <td id='q4achiv'><?php echo $row1['Q4_cumulative_acheived']; ?></td>
              <td id="ans3">
-              <?php
-              /*if(($row['Q4_cumulative_target'])<>0 && ($row['Q4_cumulative_acheived'])<>0){
-              $qq2=(($row['Q4_cumulative_target']/$row['Q4_cumulative_acheived'])* $rating);echo (round($qq2,2));
-            }*/
-              ?>
+             <?php echo round($row1['Q4rating'],2); ?>
              </td>
              <td>
-              <?php
-              /* $a=($row['Q1_cumulative_acheived']+$row['Q2_cumulative_acheived']+$row['Q3_cumulative_acheived']+$row['Q4_cumulative_acheived']);
-               $b=($row['Q1_cumulative_target']+$row['Q2_cumulative_target']+$row['Q3_cumulative_target']+$row['Q4_cumulative_target']);
-               if($a<>0 && $b<>0){
-               $c = (($a/$b)* $rating); 
-                echo (round($c,2));
-               //echo(round($c));
-           }*/
-              
-              ?>
+             <?php echo round($row1['Qs_cumulative'],2); ?>
             </td>
-             <td>12</td>
+             <td> <?php echo round($row1['Year17_18_Final_Score'],2); ?></td>
+            <!-- <<a  href="update.php?id=<?php echo $row1['id'];?>&&name=<?php echo $row1['Name'];?>">Update</a></td> -->
             </tr>
       <?php }
            ?>
             <tr>
               <td colspan="1">Experience</td>
-               <td colspan="1">5</td>
-               <td colspan="14" align="right"><input value="" style="width: 50px;" ></td>
+               <td colspan="1"><input style="width: 50px;"></td>
+              <!--  <td colspan="14" align="right"><input value="" style="width: 50px;" ></td> -->
             </tr>
              <tr>
               <td colspan="1">Future prospects </td>
-               <td colspan="1">5</td>
-               <td colspan="14" align="right"><input value="" style="width: 50px;" ></td>
+               <td colspan="1"><input style="width: 50px;"></td>
+               <!-- <td colspan="14" align="right"><input value="" style="width: 50px;" ></td> -->
             </tr>
             <tr>
               <td colspan = "15" align="right">Performance Score Out of 50</td>
@@ -198,7 +169,9 @@ function printDiv(divName) {
  
 </div>
 <div>
-  <p align="right"><input type="button" value="Print" onclick="printDiv('printableArea')" class="btn btn-success btn-lg" /> 
+  <p align="right">
+    <input type="button" value="Save" class="btn btn-primary btn-lg" /> 
+    <input type="button" value="Print" onclick="printDiv('printableArea')" class="btn btn-success btn-lg" /> 
     </p>
 </div>
   </form>
@@ -207,6 +180,9 @@ function printDiv(divName) {
   $(document).ready(function(){
     $('select').on('change', function() {
       $('#select_form').submit();
+    })
+     $('text').on('change', function() {
+      $('#input_form').submit();
     })
 
 
